@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TODO-List</title>
+    <link rel="stylesheet" href="todo-list.css">
+    <script src="todo-list.js"></script>
+    <script src="model.js"></script>
+    <script src="provider.js"></script>
+</head>
+<body>
+<meta content="width=device-width,initial-scale=0.5,user-scalable=no,maximum-scale=0.5" name="viewport"/>
+<svg  viewBox="0 -20 500 120">
+    <path id="curve" d="M150 100 Q250 10  350 100" />
+    <text width="500">
+        <textPath xlink:href="#curve">
+                                T         o        D         o         S
+        </textPath>
+    </text>
+</svg>
+
+    <div class="smile-container">
+        <img class="smile" src="resources/smell.png">
+    </div>
+
+    <div class="status">
+        <ul class="filters">
+            <li><a class="selected" >All</a></li>
+            <li><a class="">Active</a></li>
+            <li><a class="">Completed</a></li>
+        </ul>
+    </div>
+
+    <div class="status">
+        <span id="todo-count" class="todo-count">0 Items Left</span>
+        <ul class="filters">
+            <li><a class="selected" >Emergency</a></li>
+            <li><a class="">Medium</a></li>
+            <li><a class="">Low</a></li>
+        </ul>
+    </div>
+    <div class="todo-wrap">
+        <div class="todoapp">
+            <header class="header">
+                <!-- Add New Item -->
+                <input id="todo-text" class="new-todo" type="text" placeholder="What needs to be done?" autofocus>
+            </header>
+
+            <section class="main">
+                <input class="toggle-all" type="checkbox">
+                <button id="add-button" class="add">+</button>
+                <!-- Show List -->
+                <ul id="todo-list" class="todo-list"></ul>
+
+<!--                <footer class="footer">-->
+<!--                    <span class="todo-count"></span>-->
+<!--                    <ul class="filters">-->
+<!--                        <li><a class="selected" >All</a></li>-->
+<!--                        <li><a class="">Active</a></li>-->
+<!--                        <li><a class="">Completed</a></li>-->
+<!--                    </ul>-->
+<!--                    <button class="clear-completed">Clear completed</button>-->
+<!--                </footer>-->
+            </section>
+        </div>
+    </div>
+
+</body>
+</html>
