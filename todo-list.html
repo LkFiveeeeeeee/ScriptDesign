@@ -41,16 +41,20 @@
     </div>
     <div class="todo-wrap">
         <div class="todoapp">
-            <header class="header">
+
                 <!-- Add New Item -->
-                <input id="todo-text" class="new-todo" type="text" placeholder="What needs to be done?" autofocus>
-            </header>
+
+            <input id="todo-text" class="new-todo" type="text" placeholder="What needs to be done?" autofocus>
+            <button id="add-button" class="add">+</button>
 
             <section class="main">
                 <input class="toggle-all" type="checkbox">
-                <button id="add-button" class="add">+</button>
-                <!-- Show List -->
+            </section>
+            <div>
                 <ul id="todo-list" class="todo-list"></ul>
+            </div>
+                <!-- Show List -->
+
 
 <!--                <footer class="footer">-->
 <!--                    <span class="todo-count"></span>-->
@@ -61,7 +65,7 @@
 <!--                    </ul>-->
 <!--                    <button class="clear-completed">Clear completed</button>-->
 <!--                </footer>-->
-            </section>
+
         </div>
     </div>
 

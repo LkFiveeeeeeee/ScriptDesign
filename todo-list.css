@@ -110,9 +110,10 @@ input[type="checkbox"] {
 
 .new-todo,
 .edit {
-    position: relative;
+    float: left;
     margin: 0;
-    width: 100%;
+    margin-left: 50px;
+    width: 85%;
     font-size: 48px;
     font-family: inherit;
     font-weight: inherit;
@@ -123,7 +124,7 @@ input[type="checkbox"] {
 }
 
 .new-todo {
-    padding: 16px 16px 16px 60px;
+    padding: 16px 16px 16px 16px;
     border: none;
     background: rgba(0, 0, 0, 0.003);
     box-shadow: inset 0 -2px 1px rgba(0, 0, 0, 0.03);
@@ -141,8 +142,8 @@ label[for='toggle-all'] {
 
 .toggle-all {
     position: absolute;
-    top: -69px;
-    left: -12px;
+    top: 25px;
+    left: 0px;
     width: 60px;
     height: 34px;
     text-align: center;
@@ -151,7 +152,7 @@ label[for='toggle-all'] {
 
 .toggle-all:before {
     content: '❯';
-    font-size: 22px;
+    font-size: 36px;
     color: #e6e6e6;
     padding: 10px 27px 10px 27px;
 }
@@ -167,8 +168,8 @@ label[for='toggle-all'] {
 }
 
 .todo-list li {
-    position: relative;
-    height: 99px;
+    /*position: relative;*/
+    /*height: 99px;*/
     border-bottom: 1px solid #ededed;
 }
 
@@ -215,7 +216,7 @@ label[for='toggle-all'] {
 }
 
 .todo-list li label {
-    padding: 0px 60px 15px 15px;
+    padding: 0px 60px 0px 15px;
     margin-left: 45px;
     display: block;
     font-size: 48px;
@@ -328,10 +329,14 @@ button {
 }
 
 button.add{
-    position: absolute;
+
     color: #eeeeee;
-    top:-80px;
-    left: 730px;
+    float: right;
+    margin-right: 20px;
+    height: 99px;
+    line-height: 99px;
+    text-align: center;
+    width: 5%;
     font-size: 400%;
 }
 
@@ -384,7 +389,7 @@ html .clear-completed:active {
     }
 
     .todo-list li .toggle {
-        height: 40px;
+        height: 99px;
     }
 
     .toggle-all {
