@@ -86,9 +86,11 @@ function createItemComponent(id,content){
     todoItem.id = itemId;
     todoItem.innerHTML = [
         '<div class="view">',
-        '  <input class="toggle" type="checkbox">',
+        '  <div class="wrapper E">E</div>',
+        '  <div class="wrapper M">M</div>',
+        '  <div class="wrapper L">L</div>',
+        '  <div class="wrapper L"></div>',
         '  <label class="todo-label">' + content + '</label>',
-        '  <button class="destroy"></button>',
         '</div>'
     ].join('');
 
@@ -124,22 +126,7 @@ function createItemComponent(id,content){
         }
     })
 
-    var completeElem = todoItem.querySelector('.toggle');
-    completeElem.addEventListener('click',function () {
-        todoItem.classList.add(CL_COMPLETED);
-    })
 
-    var editElem = todoItem.querySelector('.todo-label');
-    editElem.addEventListener('dbclick',function () {
-        todoItem.classList.add(CL_EDITING);
-    })
-
-    var deleteElem = todoItem.querySelector('.destroy');
-    deleteElem.addEventListener('click',function () {
-        removeTodoItemFromArray(todoItem.id);
-        todoItem.parentNode.removeChild(todoItem);
-        update();
-    })
 
     var todoList = getComponent('todo-list');
     todoList.insertBefore(todoItem,todoList.firstChild);
