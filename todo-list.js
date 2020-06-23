@@ -69,6 +69,9 @@ window.onload = () =>{
 function addToDoItem(){
     var todoText = getComponent('todo-text')
     var text = todoText.value;
+    if(text === ""){
+        return ;
+    }
     console.log(text);
     var item = createToDoItem(model.data.id++,0,text,0);
     model.data.items.push(item);
@@ -117,7 +120,7 @@ function createItemComponent(id,content){
         if(Math.abs(moveY) < 15){
             e.preventDefault();
             this.style.transform = 'translate(' + moveX + 'px, ' + 0 + 'px)';
-            this.style.opacity = (1 - Math.abs(moveX) / screen.width).toFixed(1);
+         //   this.style.opacity = (1 - Math.abs(moveX) / screen.width).toFixed(1);
         }
     })
 
