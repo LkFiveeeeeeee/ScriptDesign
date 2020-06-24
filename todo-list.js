@@ -89,7 +89,7 @@ function createItemComponent(id,content){
         '  <div class="wrapper E">E</div>',
         '  <div class="wrapper M">M</div>',
         '  <div class="wrapper L">L</div>',
-        '  <div class="wrapper L"></div>',
+        '  <div class="wrapper min L"></div>',
         '  <label class="todo-label">' + content + '</label>',
         '</div>'
     ].join('');
