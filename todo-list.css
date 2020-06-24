@@ -39,6 +39,7 @@ img.smile{
 .filters {
     float: right;
     list-style: none;
+    padding-left: 0;
 }
 
 .filters li {
@@ -136,11 +137,8 @@ label[for='toggle-all'] {
 }
 
 .toggle-all {
-    position: absolute;
-    top: -75px;
-    left: 0px;
-    width: 80px;
-    height: 34px;
+    float: left;
+    /*width: 70px;*/
     text-align: center;
     border: none; /* Mobile Safari */
 }
@@ -211,12 +209,13 @@ label[for='toggle-all'] {
 
 
 .todo-list li label {
-    padding: 0px 60px 0px 15px;
-    margin-left: 45px;
+    padding: 0px 15px 0px 15px;
+    margin-left: 10px;
     display: inline-block;
     font-size: 48px;
     line-height: 99px;
     transition: color 0.4s;
+    overflow: hidden;
 }
 
 .todo-list li.completed label {
@@ -244,7 +243,19 @@ label[for='toggle-all'] {
 .todo-list li .wrapper.min{
     width: 70px;
     box-shadow: 4px 0 15px 0 lightgreen;
+    /*content:"\2714";*/
+    /*font-size: 48px;*/
 }
+
+.todo-list li .wrapper.min.checked:before{
+    /*width: 70px;*/
+    /*box-shadow: 4px 0 15px 0 lightgreen;*/
+    content:"\2714";
+    font-size: 36px;
+}
+
+
+
 
 .todo-list li .view .wrapper.E{
     background: lightcoral;
