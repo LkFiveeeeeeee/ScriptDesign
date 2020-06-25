@@ -78,11 +78,17 @@
         <div class="dialog-container">
             <div class="dialog-view">
                 <h3>Edit Todo Item</h3>
-                <ul class="filters no-margin gray-font">
-                    <li><a class="E hidbc" >Emergency</a></li>
-                    <li><a class="M hidbc">Medium</a></li>
-                    <li><a class="L hidbc">Low</a></li>
-                </ul>
+                <div class="rbot over-hidden">
+                    <ul class="filters no-margin gray-font">
+                        <li><a class="E hidbc" >Emergency</a></li>
+                        <li><a class="M hidbc">Medium</a></li>
+                        <li><a class="L hidbc">Low</a></li>
+                    </ul>
+                </div>
+                <div class="over-hidden">
+                    <span class="timespan">DDL</span>
+                    <input class="time" type="datetime-local">
+                </div>
                 <input class="new-todo dialog" type="text" autofocus>
                 <div class="right">
                     <button class="inline" id="apply">Apply</button>

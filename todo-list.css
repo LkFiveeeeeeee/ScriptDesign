@@ -13,6 +13,7 @@ body {
     line-height: 1.4em;
     background: #f5f5f5;
     color: #4d4d4d;
+    overflow: hidden;
     margin: 0 auto;
     font-weight: 300;
 }
@@ -496,5 +497,29 @@ html .clear-completed:active {
     margin-left: 50px;
 }
 
+.time{
+    float: right;
+    outline: none;
+    border: none;
+    background: none;
+    border-right: 2px solid;
+    font-size: 20px;
+    line-height: 40px;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.timespan{
+    height: 40px;
+    font-size: 28px;
+    line-height: 40px;
+}
+
+.over-hidden{
+    overflow: hidden;
+}
+
+.rbot{
+    margin-bottom: 20px;
+}
 
 

@@ -325,6 +325,9 @@ function createItemComponent(itemValue){
         console.log(e);
         clearTouchTimer();
         console.log(moveX)
+        if(canSelecPri){
+            resetPosition();
+        }
         if(moveX < 0 && !canSelecPri){
             if(moveX < -screen.width/2 ){
                 this.classList.add('over-hidden');
