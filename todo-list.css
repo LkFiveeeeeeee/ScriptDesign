@@ -70,30 +70,26 @@ img.smile{
     background: none;
 }
 
-/*input[type="checkbox"] {*/
-/*    outline: none;*/
-/*}*/
+
 
 .hidden {
     display: none;
 }
 
-.todoapp {
-    /*background: #fff;*/
-    /*overflow: hidden;*/
+.todo-container {
     margin: 20px 20px 40px 20px;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2),
     0 25px 50px 0 rgba(0, 0, 0, 0.1);
 }
 
-.todoapp input::-webkit-input-placeholder {
+.todo-container input::-webkit-input-placeholder {
     font-style: italic;
     font-weight: 300;
     color: #e6e6e6;
 }
 
 
-.todoapp h1 {
+.todo-container h1 {
     position: absolute;
     top: -270px;
     width: 100%;
@@ -143,6 +139,7 @@ img.smile{
 
 .toggle-all {
     float: left;
+    outline: none;
     /*width: 70px;*/
     text-align: center;
     border: none; /* Mobile Safari */
@@ -300,7 +297,9 @@ img.smile{
     font-weight: 300;
 }
 
-
+span{
+    color: #737373;
+}
 
 
 

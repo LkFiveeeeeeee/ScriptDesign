@@ -56,7 +56,6 @@ window.onload = () =>{
             }
         });
 
-        var data = model.data;
 
     })
 
@@ -65,6 +64,7 @@ window.onload = () =>{
     initToggleAll();
     initFirstFilter();
     initSecondFilter();
+    initClearButton();
 
     update();
 }
@@ -125,14 +125,15 @@ function initSecondFilter(){
 
 function initToggleAll(){
     getComponent('toggle-all').addEventListener('click',function () {
+        var temp = this;
         filterArray.forEach(function (item) {
-            if(this.checked){
+            if(temp.checked){
                 item.status = 1;
-            }else{
+            }else {
                 item.status = 0;
             }
-
         })
+        update();
     })
 }
 
@@ -143,7 +144,7 @@ function initAddButton() {
         console.log("start");
         timer = setTimeout(function () {
             var dialog = getComponent("dialog-wrap");
-            dialog.classList.remove('hidden');
+            dialog.classList.remove(CL_HIDDEN);
             dialog.getElementsByTagName('h3')[0].innerHTML = 'Create Todo Item';
             var todoText = getComponent('todo-text');
             if(todoText.value !== ""){
@@ -227,9 +228,19 @@ function initDialog() {
         editValue.editItem = null;
         inputField.value = "";
         getComponent('todo-text').value = '';
-        dialog.classList.add('hidden');
+        dialog.classList.add(CL_HIDDEN);
     }
 
+}
+
+function initClearButton(){
+    getComponent('clear').addEventListener('click',function () {
+        filterArray.forEach(function (item) {
+            var itemElem = getComponent('todo'+item.id)
+            itemElem.classList.add(CL_REMOVED);
+            update();
+        })
+    })
 }
 
 function setDialogPri(priIndex){
@@ -291,7 +302,7 @@ function createItemComponent(itemValue){
         startY = touchPoint.pageY;
         touchTimer = setTimeout(function () {
             var dialog = getComponent("dialog-wrap");
-            dialog.classList.remove('hidden');
+            dialog.classList.remove(CL_HIDDEN);
             dialog.getElementsByTagName('h3')[0].innerHTML = 'Edit Todo Item';
             dialog.querySelector('.dialog').value = todoItem.querySelector('.todo-content').innerHTML;
             editValue.isEdit = true;
@@ -303,29 +314,36 @@ function createItemComponent(itemValue){
     })
 
     todoItem.addEventListener('touchend',function (e) {
-        if(touchTimer){
-            clearTimeout(touchTimer);
-            touchTimer = null;
+        clearTouchTimer();
+        if(moveX < 0){
+            if(moveX < -screen.width/2 && !canRemove){
+                canRemove = true;
+                this.classList.add(CL_REMOVED);
+                update();
+            }else if(!canRemove){
+                this.style.transform = 'translate(' + 0 + 'px, ' + 0+'px)';
+                this.style.opacity = 1;
+            }
+        }else{
+            this.style.transform = 'translateX(' + 240 + 'px)';
         }
-        if(moveX < -screen.width/2 && !canRemove){
-            canRemove = true;
-            this.classList.add(CL_REMOVED);
-            update();
-        }else if(!canRemove){
-            this.style.transform = 'translate(' + 0 + 'px, ' + 0+'px)';
-            this.style.opacity = 1;
-        }
+
     })
 
     todoItem.addEventListener('touchmove',function (e) {
         var touchPoint = e.touches[0];
         moveX = touchPoint.pageX - startX;
         moveY = touchPoint.pageY - startY;
-        if(Math.abs(moveY) < 15){
+        console.log(moveX);
+        if(Math.abs(moveY) < 10 && moveX < 0){
             e.preventDefault();
             this.style.transform = 'translate(' + moveX + 'px, ' + 0 + 'px)';
          //   this.style.opacity = (1 - Math.abs(moveX) / screen.width).toFixed(1);
         }
+        if(Math.abs(moveX) > 10){
+            clearTouchTimer();
+        }
+
     })
 
 
@@ -333,14 +351,22 @@ function createItemComponent(itemValue){
     var todoList = getComponent('todo-list');
     todoList.insertBefore(todoItem,todoList.firstChild);
     return todoItem;
+
+
+    function clearTouchTimer() {
+        if(touchTimer){
+            clearTimeout(touchTimer);
+            touchTimer = null;
+        }
+    }
 }
 
 function update(){
     var data = model.data;
     var completed = 0;
     var num = 0;
+    filterArray = [];
     data.items.forEach(function (itemValue){
-        filterArray = [];
         var itemElem = getComponent('todo'+itemValue.id);
         if(itemElem){
             if(itemElem.classList.contains(CL_REMOVED)){
@@ -374,7 +400,7 @@ function update(){
             if(checkFirstFilter(itemElem)){
                 console.log(3);
                 showToDoItem(itemElem)
-                filterArray.push(itemElem);
+                filterArray.push(itemValue);
             }else{
                 console.log(1);
                 hideToDoItem(itemElem);
@@ -423,8 +449,15 @@ function update(){
     model.flush();
 
     getComponent('todo-count').innerHTML = num-completed + ' Items Left';
-    if(completed === num){
-        getComponent('toggle-all').checked = true;
+    getComponent('toggle-all').checked = completed === num && num > 0;
+    if(completed > 0 && firstFilterStatus!==1){
+        if(getComponent('clear').classList.contains(CL_HIDDEN)){
+            getComponent('clear').classList.remove(CL_HIDDEN);
+        }
+    }else{
+        if(!getComponent('clear').classList.contains(CL_HIDDEN)){
+            getComponent('clear').classList.add(CL_HIDDEN);
+        }
     }
 }
 
@@ -458,7 +491,6 @@ function hideToDoItem(item){
 }
 
 function removeToDoItem(item){
-
     function animationCallBack(){
         item.removeEventListener("animationend", removeToDoItem)
         item.parentNode.removeChild(item);
