@@ -73,14 +73,14 @@ function addToDoItem(){
         return ;
     }
     console.log(text);
-    var item = createToDoItem(model.data.id++,0,text,0);
+    var item = createToDoItem(model.data.id++,1,text,0);
     model.data.items.push(item);
 
     todoText.value = "";
     update();
 }
 
-function createItemComponent(id,content){
+function createItemComponent(id,content,pri){
     var todoItem = document.createElement("li");
     var itemId = 'todo'+id;
     todoItem.id = itemId;
@@ -89,11 +89,19 @@ function createItemComponent(id,content){
         '  <div class="wrapper E">E</div>',
         '  <div class="wrapper M">M</div>',
         '  <div class="wrapper L">L</div>',
-        '  <div class="wrapper min L"></div>',
-        '  <label class="todo-label">' + content + '</label>',
+        '  <div class="wrapper min"></div>',
+        '  <div class="todo-content">' + content + '</div>',
         '</div>'
     ].join('');
 
+    var showPri = todoItem.querySelector('.min');
+    if(pri === 0){
+        showPri.classList.add('L');
+    }else if(pri === 1){
+        showPri.classList.add('M');
+    }else if(pri === 2){
+        showPri.classList.add('E');
+    }
 
     var startX, startY, moveX, moveY;
     var canRemove = false;
@@ -145,11 +153,11 @@ function update(){
                 data.removeItem(itemValue);
                 return;
             }
-            if(itemElem.querySelector('.todo-label').innerHTML != item.content){
-                itemElem.querySelector('.todo-label').innerHTML = item.content;
+            if(itemElem.querySelector('.todo-content').innerHTML != item.content){
+                itemElem.querySelector('.todo-content').innerHTML = item.content;
             }
         }else{
-            itemElem = createItemComponent(itemValue.id,item.content);
+            itemElem = createItemComponent(itemValue.id,item.content,item.pri);
         }
         showToDoItem(itemElem);
     })

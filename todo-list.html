@@ -9,7 +9,7 @@
     <script src="provider.js"></script>
 </head>
 <body>
-<meta content="width=device-width" name="viewport"/>
+<meta content="width=device-width  minimum-scale=0.1  maximum-scale=0.5 " name="viewport"/>
 <svg  viewBox="0 -20 500 120">
     <path id="curve" d="M150 100 Q250 10  350 100" />
     <text width="500">
@@ -57,8 +57,8 @@
                             <div class="wrapper E">E</div>
                             <div class="wrapper M">M</div>
                             <div class="wrapper L">L</div>
-                            <div class="wrapper L"></div>
-                            <label class="todo-label">' + content + '</label>
+                            <div class="wrapper L min"></div>
+                            <div class="todo-content">' + content + '</div>
                         </div>
                     </li>
 
@@ -80,6 +80,29 @@
 
         </div>
     </div>
+
+    <div class="dialog-wrap hidden">
+        <div class="dialog-container">
+            <div class="dialog-view">
+                <h3>Edit Todo Item</h3>
+                <ul class="filters no-margin gray-font">
+                    <li><a class="" >Emergency</a></li>
+                    <li><a class="">Medium</a></li>
+                    <li><a class="L">Low</a></li>
+                </ul>
+                <input class="new-todo dialog" type="text" autofocus>
+                <div class="right">
+                    <button class="inline">Apply</button>
+                    <button class="inline gray-font">Cancel</button>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
 
 </body>
 </html>
