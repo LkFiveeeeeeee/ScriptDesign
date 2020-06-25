@@ -293,7 +293,7 @@ function createItemComponent(itemValue){
     }
 
     var startX, startY, moveX, moveY;
-    var canRemove = false;
+    // var canRemove = false;
     var canSelecPri = false;
     var touchTimer = null;
 
@@ -303,6 +303,7 @@ function createItemComponent(itemValue){
         console.log(3);
         console.log(e);
         console.log(moveX);
+        moveX = 0;
         var touchPoint = e.touches[0];
         startX = touchPoint.pageX;
         startY = touchPoint.pageY;
@@ -324,13 +325,12 @@ function createItemComponent(itemValue){
         console.log(e);
         clearTouchTimer();
         console.log(moveX)
-        if(moveX < 0){
-            if(moveX < -screen.width/2 && !canRemove){
-                canRemove = true;
+        if(moveX < 0 && !canSelecPri){
+            if(moveX < -screen.width/2 ){
                 this.classList.add('over-hidden');
                 this.classList.add(CL_REMOVED);
                 update();
-            }else if(!canRemove){
+            }else {
                 // this.style.transform = 'translate(' + 0 + 'px, ' + 0+'px)';
                 resetPosition();
                 this.style.opacity = 1;
@@ -357,6 +357,9 @@ function createItemComponent(itemValue){
     })
 
     function resetPosition(){
+        setTimeout(function () {
+            canSelecPri = false;
+        },500)
         moveX = 0;
         todoItem.classList.add('over-hidden');
         todoItem.style.transform = 'translateX(' + 0 + 'px)';
@@ -367,7 +370,7 @@ function createItemComponent(itemValue){
         var touchPoint = e.touches[0];
         moveX = touchPoint.pageX - startX;
         moveY = touchPoint.pageY - startY;
-        if(Math.abs(moveY) < 10 && moveX < 0){
+        if(Math.abs(moveY) < 10 && moveX < 0 && !canSelecPri){
             e.preventDefault();
             this.style.transform = 'translate(' + moveX + 'px, ' + 0 + 'px)';
          //   this.style.opacity = (1 - Math.abs(moveX) / screen.width).toFixed(1);
