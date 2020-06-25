@@ -45,8 +45,8 @@ img.smile{
 
 .filters li {
     display: inline;
-    line-height: 32px;
-    font-size: 32px;
+    line-height: 28px;
+    font-size: 28px;
 }
 
 .filters li a {
@@ -65,6 +65,10 @@ img.smile{
 
 .filters li a.selected {
     background: rgba(175, 47, 47, 0.2);
+}
+
+.filters li a.hidbc{
+    background: none;
 }
 
 /*input[type="checkbox"] {*/
@@ -236,7 +240,7 @@ img.smile{
 }
 
 .todo-list li .wrapper.min.M{
-    box-shadow: 4px 0 15px 0 lightyellow;
+    box-shadow: 5px 0 15px 0 #ffff9f;
 }
 
 .todo-list li .wrapper.min.E{
@@ -253,7 +257,7 @@ img.smile{
 }
 
 .M{
-    background: lightyellow;
+    background: #ffff9fe8;
 }
 
 .L{
@@ -302,7 +306,6 @@ img.smile{
     line-height: 60px;
     font-size: 28px;
     margin-left: 5px;
-    margin-top: 5px;
 }
 
 .todo-count strong {
@@ -328,6 +331,7 @@ button {
     margin: 0;
     padding: 0;
     border: 0;
+    outline: none;
     background: none;
     font-size: 100%;
     color: inherit;

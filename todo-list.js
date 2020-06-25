@@ -1,8 +1,5 @@
 "use strict"
 
-var _todoId = 0;
-
-var _todoItems = [];
 
 var CL_COMPLETED = 'completed';
 var CL_SELECTED = 'selected';
@@ -62,8 +59,111 @@ window.onload = () =>{
 
     })
 
-    getComponent("add-button").addEventListener('click',addToDoItem);
+    initAddButton();
+    initDialog();
+
+
     update();
+}
+
+function initAddButton() {
+
+    var timer;
+    getComponent("add-button").addEventListener('touchstart',function () {
+        console.log("start");
+        timer = setTimeout(function () {
+            var dialog = getComponent("dialog-wrap");
+            dialog.classList.remove('hidden');
+            dialog.getElementsByTagName('h3')[0].innerHTML = 'Create Todo Item';
+            var todoText = getComponent('todo-text');
+            if(todoText.value !== ""){
+                dialog.querySelector('.dialog').value = todoText.value;
+            }
+            timer = null;
+        },1000)
+    });
+
+    getComponent('add-button').addEventListener('touchend',function () {
+        console.log("1111");
+        if(!timer){
+            return ;
+        }else{
+            clearTimeout(timer);
+            addToDoItem();
+        }
+    })
+
+}
+
+
+function initDialog() {
+    var dialog = getComponent('dialog-wrap');
+    var inputField = dialog.querySelector('.dialog');
+    var liArray = dialog.querySelector('.filters').getElementsByTagName('li');
+    [].forEach.call(liArray,function (item) {
+        console.log(item);
+        item.addEventListener('click',changeSelecPri);
+    })
+
+    getComponent('apply').addEventListener('click',function () {
+        if(!window.editValue.isEdit){
+            var todoItem = createToDoItem(model.data.id++,editValue.selePri,inputField.value,0);
+            model.data.items.push(todoItem);
+        }else{
+            var dataIndex = model.data.items.indexOf(editValue.editItem);
+            model.data.items[dataIndex].content = inputField.value;
+            model.data.items[dataIndex].pri = editValue.selePri;
+        }
+
+
+        resetDialog();
+        update();
+    })
+
+    getComponent('cancel').addEventListener('click',function () {
+        resetDialog();
+    })
+
+    function changeSelecPri() {
+        [].forEach.call(liArray,function (item) {
+            //TODO change hidden and value
+            if (!item.firstElementChild.classList.contains('hidbc')){
+                item.firstElementChild.classList.add('hidbc')
+            }
+        })
+        if(this.firstElementChild.classList.contains('hidbc')){
+            this.firstElementChild.classList.remove('hidbc');
+        }
+        if(this.innerText === 'Emergency'){
+            window.editValue.selePri =2;
+        }else if(this.innerText === 'Medium'){
+            window.editValue.selePri = 1;
+        }else if(this.innerText === 'Low'){
+            window.editValue.selePri = 0;
+        }
+
+    }
+
+    function resetDialog(){
+        [].forEach.call(liArray,function (item) {
+            //TODO change hidden and value
+            if (!item.firstElementChild.classList.contains('hidbc')){
+                item.firstElementChild.classList.add('hidbc')
+            }
+            if(item.innerText === 'Low'){
+                if(item.firstElementChild.classList.contains("hidbc")){
+                    item.firstElementChild.classList.remove('hidbc');
+                }
+            }
+        })
+        editValue.selePri = 0;
+        editValue.isEdit = false;
+        editValue.editItem = null;
+        inputField.value = "";
+        getComponent('todo-text').value = '';
+        dialog.classList.add('hidden');
+    }
+
 }
 
 function addToDoItem(){
@@ -73,16 +173,16 @@ function addToDoItem(){
         return ;
     }
     console.log(text);
-    var item = createToDoItem(model.data.id++,1,text,0);
+    var item = createToDoItem(model.data.id++,0,text,0);
     model.data.items.push(item);
 
     todoText.value = "";
     update();
 }
 
-function createItemComponent(id,content,pri){
+function createItemComponent(itemValue){
     var todoItem = document.createElement("li");
-    var itemId = 'todo'+id;
+    var itemId = 'todo'+ itemValue.id;
     todoItem.id = itemId;
     todoItem.innerHTML = [
         '<div class="view">',
@@ -90,29 +190,48 @@ function createItemComponent(id,content,pri){
         '  <div class="wrapper M">M</div>',
         '  <div class="wrapper L">L</div>',
         '  <div class="wrapper min"></div>',
-        '  <div class="todo-content">' + content + '</div>',
+        '  <div class="todo-content">' + itemValue.content + '</div>',
         '</div>'
     ].join('');
 
     var showPri = todoItem.querySelector('.min');
-    if(pri === 0){
+    if(itemValue.pri === 0){
         showPri.classList.add('L');
-    }else if(pri === 1){
+    }else if(itemValue.pri === 1){
         showPri.classList.add('M');
-    }else if(pri === 2){
+    }else if(itemValue.pri === 2){
         showPri.classList.add('E');
+    }
+
+    if(itemValue.status === 1){
+        todoItem.classList.add('completed')
     }
 
     var startX, startY, moveX, moveY;
     var canRemove = false;
+    var touchTimer = null;
 
     todoItem.addEventListener('touchstart',function (e) {
         var touchPoint = e.touches[0];
         startX = touchPoint.pageX;
         startY = touchPoint.pageY;
+        touchTimer = setTimeout(function () {
+            var dialog = getComponent("dialog-wrap");
+            dialog.classList.remove('hidden');
+            dialog.getElementsByTagName('h3')[0].innerHTML = 'Edit Todo Item';
+            dialog.querySelector('.dialog').value = todoItem.querySelector('.todo-content').innerHTML;
+            editValue.isEdit = true;
+            editValue.editItem = itemValue;
+            editValue.selePri = itemValue.pri;
+            touchTimer = null;
+        },1000)
     })
 
     todoItem.addEventListener('touchend',function (e) {
+        if(touchTimer){
+            clearTimeout(touchTimer);
+            touchTimer = null;
+        }
         if(moveX < -screen.width/2 && !canRemove){
             canRemove = true;
             this.classList.add(CL_REMOVED);
@@ -146,32 +265,43 @@ function update(){
 
     data.items.forEach(function (itemValue){
         var itemElem = getComponent('todo'+itemValue.id);
-        var item = itemValue;
         if(itemElem){
             if(itemElem.classList.contains(CL_REMOVED)){
                 removeToDoItem(itemElem);
                 data.removeItem(itemValue);
                 return;
             }
-            if(itemElem.querySelector('.todo-content').innerHTML != item.content){
-                itemElem.querySelector('.todo-content').innerHTML = item.content;
+            if(itemElem.querySelector('.todo-content').innerHTML != itemValue.content){
+                itemElem.querySelector('.todo-content').innerHTML = itemValue.content;
             }
+
+            changePri(itemValue.pri,itemElem);
         }else{
-            itemElem = createItemComponent(itemValue.id,item.content,item.pri);
+            itemElem = createItemComponent(itemValue);
         }
         showToDoItem(itemElem);
     })
+
+    function changePri(selePri,itemElem){
+        var showPri = itemElem.querySelector('.min');
+        var colorList = ['L','M','E'];
+        for(var i =0;i < colorList.length;i++){
+            if(i === selePri){
+                if(!showPri.classList.contains(colorList[i])){
+                    showPri.classList.add(colorList[i]);
+                }
+            }else{
+                if(showPri.classList.contains(colorList[i])){
+                    showPri.classList.remove(colorList[i]);
+                }
+            }
+        }
+    }
 
     model.flush();
 
     var num = data.items.length;
     getComponent('todo-count').innerHTML = num + ' Items Left';
-}
-
-function removeTodoItemFromArray(id){
-    var numId = parseInt(id.substring(4));
-    _todoItems.splice(_todoItems.findIndex(i => i.id === numId),1);
-    console.log(_todoItems);
 }
 
 function showToDoItem(item){

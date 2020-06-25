@@ -52,15 +52,7 @@
 <!--            <div style="height: 99px"></div>-->
             <div>
                 <ul id="todo-list" class="todo-list">
-                    <li>
-                        <div class="view">
-                            <div class="wrapper E">E</div>
-                            <div class="wrapper M">M</div>
-                            <div class="wrapper L">L</div>
-                            <div class="wrapper L min"></div>
-                            <div class="todo-content">' + content + '</div>
-                        </div>
-                    </li>
+
 
 
                 </ul>
@@ -81,19 +73,19 @@
         </div>
     </div>
 
-    <div class="dialog-wrap hidden">
+    <div class="dialog-wrap hidden" id="dialog-wrap">
         <div class="dialog-container">
             <div class="dialog-view">
                 <h3>Edit Todo Item</h3>
                 <ul class="filters no-margin gray-font">
-                    <li><a class="" >Emergency</a></li>
-                    <li><a class="">Medium</a></li>
+                    <li><a class="E hidbc" >Emergency</a></li>
+                    <li><a class="M hidbc">Medium</a></li>
                     <li><a class="L">Low</a></li>
                 </ul>
                 <input class="new-todo dialog" type="text" autofocus>
                 <div class="right">
-                    <button class="inline">Apply</button>
-                    <button class="inline gray-font">Cancel</button>
+                    <button class="inline" id="apply">Apply</button>
+                    <button class="inline gray-font" id="cancel">Cancel</button>
 
                 </div>
 

@@ -9,3 +9,9 @@ window.model = {
     },
     TOKEN:'LK-ToDoMVC'
 }
+
+window.editValue = {
+    isEdit:false,
+    selePri:0,
+    editItem:null
+}
