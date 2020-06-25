@@ -46,17 +46,16 @@ img.smile{
 .filters li {
     display: inline;
     line-height: 28px;
+    outline: none;
     font-size: 28px;
 }
 
 .filters li a {
+    outline: none;
     color: inherit;
     margin: 3px;
     padding: 3px 7px;
     text-decoration: none;
-    border: 1px solid transparent;
-    border-radius: 3px;
-    cursor: pointer;
 }
 
 .filters li a:hover {
@@ -250,6 +249,7 @@ img.smile{
 .todo-list li .wrapper.min.checked:before{
     content:"\2714";
     font-size: 36px;
+    color: #737373;
 }
 
 .E{
@@ -264,18 +264,6 @@ img.smile{
     background: lightgreen;
 }
 
-/*.todo-list li .view .wrapper.E{*/
-
-/*}*/
-
-/*.todo-list li .view .wrapper.M{*/
-
-
-/*}*/
-
-/*.todo-list li .view .wrapper.L{*/
-
-/*}*/
 
 .footer {
     color: #777;
@@ -503,9 +491,5 @@ html .clear-completed:active {
     margin-left: 50px;
 }
 
-/*.dialog-container h3{*/
-/*    margin-left: 5%;*/
-/*    margin-top: 5%;*/
 
-/*}*/
 

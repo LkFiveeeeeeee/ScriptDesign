@@ -15,3 +15,12 @@ window.editValue = {
     selePri:0,
     editItem:null
 }
+
+window.constPri = ['L','M','E'];
+
+window.filterArray = [];
+
+window.firstFilterStatus = 0;   // 0-> all  1-> active 2-> completed
+
+window.secondFilterStatus = []  // can contain 'E','M','L'
+

@@ -2,10 +2,11 @@
 
 
 var CL_COMPLETED = 'completed';
-var CL_SELECTED = 'selected';
-var CL_EDITING = 'editing';
 var CL_HIDDEN = 'hidden';
 var CL_REMOVED = 'removed'
+var CL_EMERGENCY = 'E';
+var CL_MEDIUM = 'M';
+var CL_LOW = 'L';
 /*
 **  pri 0,1,2 => low , medium , emergency
 **  status 0 => actived 1 => completed
@@ -29,7 +30,7 @@ window.onload = () =>{
     model.init(()=>{
         Object.assign(model.data,{
             getItem:function (index) {
-                if(index){
+                if(index>=0){
                     return this.items[index];
                 }else{
                     console.error("null index");
@@ -37,7 +38,7 @@ window.onload = () =>{
                 }
             },
             setItem:function (index, itemValue) {
-                if(index){
+                if(index>=0){
                     this.items[index] = itemValue;
                 }else{
                     console.error("null index");
@@ -61,9 +62,78 @@ window.onload = () =>{
 
     initAddButton();
     initDialog();
-
+    initToggleAll();
+    initFirstFilter();
+    initSecondFilter();
 
     update();
+}
+
+function initFirstFilter(){
+    var firstFilterWrap = getComponent('first-filter');
+    var filterArrays = firstFilterWrap.getElementsByTagName('li');
+
+    [].forEach.call(filterArrays,function (item) {
+        item.addEventListener('click',selected)
+    })
+
+    function selected(e){
+        if(this.firstElementChild.classList.contains('selected')){
+            return;
+        }
+        removeSelected();
+        console.log(e);
+        this.firstElementChild.classList.add('selected');
+        if(this.innerText === 'All'){
+            window.firstFilterStatus = 0;
+        }else if(this.innerText === 'Active'){
+            window.firstFilterStatus = 1;
+        }else{
+            window.firstFilterStatus = 2;
+        }
+        update();
+    }
+
+    function removeSelected(){
+        [].forEach.call(filterArrays,function (item) {
+            if(item.firstElementChild.classList.contains('selected')){
+                item.firstElementChild.classList.remove('selected');
+            }
+        })
+    }
+}
+
+function initSecondFilter(){
+    var secondFilterWrap = getComponent('second-filter');
+    var secondArrays = secondFilterWrap.getElementsByTagName('li');
+
+    [].forEach.call(secondArrays,function (item) {
+        item.addEventListener('click',selected);
+    })
+
+    function selected(){
+        if(this.firstElementChild.classList.contains('hidbc')){
+            this.firstElementChild.classList.remove('hidbc');
+            secondFilterStatus.push(this.innerText[0]);
+        }else{
+            this.firstElementChild.classList.add('hidbc');
+            secondFilterStatus.splice(secondFilterStatus.indexOf(this.innerText[0]),1);
+        }
+        update();
+    }
+}
+
+function initToggleAll(){
+    getComponent('toggle-all').addEventListener('click',function () {
+        filterArray.forEach(function (item) {
+            if(this.checked){
+                item.status = 1;
+            }else{
+                item.status = 0;
+            }
+
+        })
+    })
 }
 
 function initAddButton() {
@@ -79,6 +149,7 @@ function initAddButton() {
             if(todoText.value !== ""){
                 dialog.querySelector('.dialog').value = todoText.value;
             }
+            setDialogPri(0);
             timer = null;
         },1000)
     });
@@ -111,8 +182,8 @@ function initDialog() {
             model.data.items.push(todoItem);
         }else{
             var dataIndex = model.data.items.indexOf(editValue.editItem);
-            model.data.items[dataIndex].content = inputField.value;
-            model.data.items[dataIndex].pri = editValue.selePri;
+            model.data.getItem(dataIndex).content = inputField.value;
+            model.data.getItem(dataIndex).pri = editValue.selePri;
         }
 
 
@@ -150,11 +221,6 @@ function initDialog() {
             if (!item.firstElementChild.classList.contains('hidbc')){
                 item.firstElementChild.classList.add('hidbc')
             }
-            if(item.innerText === 'Low'){
-                if(item.firstElementChild.classList.contains("hidbc")){
-                    item.firstElementChild.classList.remove('hidbc');
-                }
-            }
         })
         editValue.selePri = 0;
         editValue.isEdit = false;
@@ -164,6 +230,14 @@ function initDialog() {
         dialog.classList.add('hidden');
     }
 
+}
+
+function setDialogPri(priIndex){
+    var dialog = getComponent('dialog-wrap');
+    var priItem = dialog.querySelector('.'+constPri[priIndex]);
+    if(priItem.classList.contains('hidbc')){
+        priItem.classList.remove('hidbc');
+    }
 }
 
 function addToDoItem(){
@@ -195,16 +269,16 @@ function createItemComponent(itemValue){
     ].join('');
 
     var showPri = todoItem.querySelector('.min');
-    if(itemValue.pri === 0){
-        showPri.classList.add('L');
-    }else if(itemValue.pri === 1){
-        showPri.classList.add('M');
-    }else if(itemValue.pri === 2){
-        showPri.classList.add('E');
-    }
+    showPri.classList.add(constPri[itemValue.pri]);
+    showPri.addEventListener('click',function () {
+        var itemIndex = model.data.items.indexOf(itemValue);
+        model.data.items[itemIndex].status = Math.abs(model.data.items[itemIndex].status-1);
+        update();
+    })
 
     if(itemValue.status === 1){
-        todoItem.classList.add('completed')
+        todoItem.classList.add(CL_COMPLETED);
+        showPri.classList.add("checked");
     }
 
     var startX, startY, moveX, moveY;
@@ -223,6 +297,7 @@ function createItemComponent(itemValue){
             editValue.isEdit = true;
             editValue.editItem = itemValue;
             editValue.selePri = itemValue.pri;
+            setDialogPri(itemValue.pri);
             touchTimer = null;
         },1000)
     })
@@ -262,8 +337,10 @@ function createItemComponent(itemValue){
 
 function update(){
     var data = model.data;
-
+    var completed = 0;
+    var num = 0;
     data.items.forEach(function (itemValue){
+        filterArray = [];
         var itemElem = getComponent('todo'+itemValue.id);
         if(itemElem){
             if(itemElem.classList.contains(CL_REMOVED)){
@@ -274,25 +351,70 @@ function update(){
             if(itemElem.querySelector('.todo-content').innerHTML != itemValue.content){
                 itemElem.querySelector('.todo-content').innerHTML = itemValue.content;
             }
-
+            if(itemValue.status === 1){
+                if(!itemElem.classList.contains(CL_COMPLETED)){
+                    itemElem.classList.add(CL_COMPLETED);
+                    itemElem.querySelector('.min').classList.add("checked");
+                }
+            }else if(itemValue.status === 0){
+                if(itemElem.classList.contains(CL_COMPLETED)){
+                    itemElem.classList.remove(CL_COMPLETED);
+                    itemElem.querySelector('.min').classList.remove("checked");
+                }
+            }
             changePri(itemValue.pri,itemElem);
         }else{
             itemElem = createItemComponent(itemValue);
         }
-        showToDoItem(itemElem);
+        if(checkSecondFilter(itemElem)){
+            num++;
+            if(itemElem.classList.contains(CL_COMPLETED)){
+                completed++;
+            }
+            if(checkFirstFilter(itemElem)){
+                console.log(3);
+                showToDoItem(itemElem)
+                filterArray.push(itemElem);
+            }else{
+                console.log(1);
+                hideToDoItem(itemElem);
+            }
+        }else{
+            console.log(2);
+            hideToDoItem(itemElem);
+        }
+
     })
+
+    function checkFirstFilter(itemElem) {
+        return firstFilterStatus === 0 ||
+            (firstFilterStatus === 1 && !itemElem.classList.contains(CL_COMPLETED)) ||
+            (firstFilterStatus === 2 && itemElem.classList.contains(CL_COMPLETED));
+    }
+
+    function checkSecondFilter(itemElem){
+        var judge = false;
+        if(secondFilterStatus.length === 0){
+            return true;
+        }
+        secondFilterStatus.forEach(function (item) {
+            if(itemElem.querySelector('.min.'+item)!=null){
+                judge = true;
+            }
+        })
+        return judge;
+    }
 
     function changePri(selePri,itemElem){
         var showPri = itemElem.querySelector('.min');
-        var colorList = ['L','M','E'];
-        for(var i =0;i < colorList.length;i++){
+        for(var i =0;i < constPri.length;i++){
             if(i === selePri){
-                if(!showPri.classList.contains(colorList[i])){
-                    showPri.classList.add(colorList[i]);
+                if(!showPri.classList.contains(constPri[i])){
+                    showPri.classList.add(constPri[i]);
                 }
             }else{
-                if(showPri.classList.contains(colorList[i])){
-                    showPri.classList.remove(colorList[i]);
+                if(showPri.classList.contains(constPri[i])){
+                    showPri.classList.remove(constPri[i]);
                 }
             }
         }
@@ -300,12 +422,14 @@ function update(){
 
     model.flush();
 
-    var num = data.items.length;
-    getComponent('todo-count').innerHTML = num + ' Items Left';
+    getComponent('todo-count').innerHTML = num-completed + ' Items Left';
+    if(completed === num){
+        getComponent('toggle-all').checked = true;
+    }
 }
 
 function showToDoItem(item){
-    if(item.classList.contains(CL_HIDDEN)){
+    while(item.classList.contains(CL_HIDDEN)){
         item.classList.remove(CL_HIDDEN);
     }
     item.style.animation = "addItem 0.5s";
@@ -313,17 +437,33 @@ function showToDoItem(item){
 
 function hideToDoItem(item){
 
-    item.addEventListener("animationend",function lis(){
-        item.removeEventListener("animationend", lis)
-        item.classList.add(CL_HIDDEN);
-    })
-    item.style.animation = "hideItem 0.5s";
+    function animationCallback(e){
+        console.log(e);
+        if(e.animationName == 'hideItem'){
+            if(!item.classList.contains(CL_HIDDEN)){
+                item.classList.add(CL_HIDDEN);
+            }
+            item.removeEventListener("animationend", animationCallback)
+        }
+
+
+        console.log("hidden!")
+    }
+
+    item.addEventListener("animationend", animationCallback)
+    if(!item.classList.contains(CL_HIDDEN)){
+        item.style.animation = "hideItem 0.5s";
+    }
+
 }
 
 function removeToDoItem(item){
-    item.addEventListener("animationend",function lis(){
-        item.removeEventListener("animationend", lis)
+
+    function animationCallBack(){
+        item.removeEventListener("animationend", removeToDoItem)
         item.parentNode.removeChild(item);
-    })
+    }
+
+    item.addEventListener("animationend",animationCallBack);
     item.style.animation = "hideItem 0.5s";
 }

@@ -24,7 +24,8 @@
     </div>
 
     <div class="status">
-        <ul class="filters">
+        <span id='clear' class="todo-count">Clear selected</span>
+        <ul id="first-filter" class="filters">
             <li><a class="selected" >All</a></li>
             <li><a class="">Active</a></li>
             <li><a class="">Completed</a></li>
@@ -33,10 +34,10 @@
 
     <div class="status">
         <span id="todo-count" class="todo-count">0 Items Left</span>
-        <ul class="filters">
-            <li><a class="selected" >Emergency</a></li>
-            <li><a class="">Medium</a></li>
-            <li><a class="">Low</a></li>
+        <ul id="second-filter" class="filters">
+            <li><a class="E hidbc" >Emergency</a></li>
+            <li><a class="M hidbc">Medium</a></li>
+            <li><a class="L hidbc">Low</a></li>
         </ul>
     </div>
     <div class="todo-wrap">
@@ -44,7 +45,7 @@
 
                 <!-- Add New Item -->
             <div class="input-wrap">
-                <input class="toggle-all" type="checkbox">
+                <input id="toggle-all" class="toggle-all" type="checkbox">
                 <input id="todo-text" class="new-todo" type="text" placeholder="What needs to be done?" autofocus>
                 <button id="add-button" class="add">+</button>
             </div>
@@ -80,7 +81,7 @@
                 <ul class="filters no-margin gray-font">
                     <li><a class="E hidbc" >Emergency</a></li>
                     <li><a class="M hidbc">Medium</a></li>
-                    <li><a class="L">Low</a></li>
+                    <li><a class="L hidbc">Low</a></li>
                 </ul>
                 <input class="new-todo dialog" type="text" autofocus>
                 <div class="right">
