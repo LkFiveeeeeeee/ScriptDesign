@@ -26,7 +26,6 @@ function getComponent(s){
 }
 
 window.onload = () =>{
-
     model.init(()=>{
         Object.assign(model.data,{
             getItem:function (index) {
@@ -267,6 +266,7 @@ function addToDoItem(){
 
 function createItemComponent(itemValue){
     var todoItem = document.createElement("li");
+    todoItem.classList.add('over-hidden');
     var itemId = 'todo'+ itemValue.id;
     todoItem.id = itemId;
     todoItem.innerHTML = [
@@ -294,9 +294,15 @@ function createItemComponent(itemValue){
 
     var startX, startY, moveX, moveY;
     var canRemove = false;
+    var canSelecPri = false;
     var touchTimer = null;
 
+
+
     todoItem.addEventListener('touchstart',function (e) {
+        console.log(3);
+        console.log(e);
+        console.log(moveX);
         var touchPoint = e.touches[0];
         startX = touchPoint.pageX;
         startY = touchPoint.pageY;
@@ -314,27 +320,53 @@ function createItemComponent(itemValue){
     })
 
     todoItem.addEventListener('touchend',function (e) {
+        console.log(2);
+        console.log(e);
         clearTouchTimer();
+        console.log(moveX)
         if(moveX < 0){
             if(moveX < -screen.width/2 && !canRemove){
                 canRemove = true;
+                this.classList.add('over-hidden');
                 this.classList.add(CL_REMOVED);
                 update();
             }else if(!canRemove){
-                this.style.transform = 'translate(' + 0 + 'px, ' + 0+'px)';
+                // this.style.transform = 'translate(' + 0 + 'px, ' + 0+'px)';
+                resetPosition();
                 this.style.opacity = 1;
             }
-        }else{
+        }else if(moveX > 100){
+            canSelecPri = true;
+            this.classList.remove('over-hidden');
+            this.querySelector('.min').classList.add(CL_HIDDEN);
             this.style.transform = 'translateX(' + 240 + 'px)';
         }
+        document.addEventListener('touchstart',function tempLis(e) {
 
+            var liX1 = todoItem.offsetLeft;
+            var liX2 = todoItem.offsetLeft + todoItem.offsetWidth;
+            var liy1 = todoItem.offsetTop;
+            var liy2 = todoItem.offsetHeight + todoItem.offsetTop;
+            var curX = e.touches[0].pageX;
+            var curY = e.touches[0].pageY;
+            if(curX < liX1 || curX >liX2 || curY < liy1 || curY > liy2 ){
+                resetPosition();
+            }
+            document.removeEventListener('touchstart',tempLis);
+        })
     })
+
+    function resetPosition(){
+        moveX = 0;
+        todoItem.classList.add('over-hidden');
+        todoItem.style.transform = 'translateX(' + 0 + 'px)';
+        todoItem.querySelector('.min').classList.remove(CL_HIDDEN);
+    }
 
     todoItem.addEventListener('touchmove',function (e) {
         var touchPoint = e.touches[0];
         moveX = touchPoint.pageX - startX;
         moveY = touchPoint.pageY - startY;
-        console.log(moveX);
         if(Math.abs(moveY) < 10 && moveX < 0){
             e.preventDefault();
             this.style.transform = 'translate(' + moveX + 'px, ' + 0 + 'px)';
@@ -347,6 +379,29 @@ function createItemComponent(itemValue){
     })
 
 
+    todoItem.querySelectorAll('.wrapper').forEach(function (item) {
+        if(item.classList.contains('min')){
+            return;
+        }
+        item.addEventListener('touchstart',function (e) {
+
+            e.preventDefault();
+            e.stopPropagation();
+            console.log(1);
+            console.log(e);
+            if(item.classList.contains(CL_EMERGENCY)){
+                itemValue.pri = 2;
+            }
+            if(item.classList.contains(CL_MEDIUM)){
+                itemValue.pri = 1;
+            }
+            if(item.classList.contains(CL_LOW)){
+                itemValue.pri = 0;
+            }
+            resetPosition();
+            update();
+        })
+    })
 
     var todoList = getComponent('todo-list');
     todoList.insertBefore(todoItem,todoList.firstChild);
