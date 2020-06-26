@@ -409,11 +409,14 @@ function createItemComponent(itemValue){
     })
 
     var diff = compareDate(new Date(itemValue.ddl),new Date());
-    if(diff <=0){
-        todoItem.querySelector('.ddl').classList.add('El');
-    }else if(diff <=1){
-        todoItem.querySelector('.ddl').classList.add('Ml');
+    if(itemValue.status !== 1){
+        if(diff <=0){
+            todoItem.querySelector('.ddl').classList.add('El');
+        }else if(diff <=1){
+            todoItem.querySelector('.ddl').classList.add('Ml');
+        }
     }
+
 
     if(itemValue.status === 1){
         todoItem.classList.add(CL_COMPLETED);
@@ -612,8 +615,9 @@ function update(){
             }
             ddl = ddlElem.innerText;
             ddl = ddl.substr(ddl.indexOf(' ')+1);
+            removeDDlWarning(itemElem);
             if(itemValue.status !== 1){
-                removeDDlWarning(itemElem);
+
                 var diff = compareDate(new Date(ddl),new Date());
                 if(diff <= 0){
                     ddlElem.classList.add('El');

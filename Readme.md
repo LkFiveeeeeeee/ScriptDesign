@@ -62,9 +62,16 @@ todo-list.html 参考了部分页面结构的实现，但我自己做了非常�
 
 > 添加ToDo
 
+分为两种情况
+
++ 直接添加 会默认ddl为1小时之后，并且优先级为并不紧急
++ 长按添加 可以对属性进行详细设置
+
 ![AddToDo](record/AddToDo.gif)
 
 > 编辑ToDo以及ddl变色
+
+长按 ToDo 的子项可以弹出dialog进行编辑，可以设定的时间的最小值时当前时间。当设定的时间与当前的是钱差值小于1天时，变红。 小于2天是，变褐黄色。 
 
 ![EditToDo](record/EditToDo.gif)
 
@@ -72,7 +79,12 @@ todo-list.html 参考了部分页面结构的实现，但我自己做了非常�
 
 ![delete](record/delete.gif)
 
-> 左滑更改tag
+> 更改tag
+
+可以通过两种方式更改Tag
+
++ 通过编辑dialog
++ 通过左滑滑出更改折叠项，进行更改
 
 ![changeTag](record/changeTag.gif)
 
@@ -82,4 +94,24 @@ todo-list.html 参考了部分页面结构的实现，但我自己做了非常�
 
 > 多级动态过滤
 
-![multiple filters](record/multiple filters.gif)
+动态过滤总共包括三级
+
++ 第一级 [all active completed], 该过滤为单选，当激活一个时，其他将不被激活。
++ 第二级 [emergency medium low], 该过滤为对tag的过滤，可以多选。 当都不选时，默认为全部。
++ 第三级 [pick date], 该过滤为对ddl的过滤，精确到每个月的每一天。可以不唤醒，则不会使用该过滤。
+
+| ![](record/filter.png) | ![](record/filter-with-date.png) |
+| :--------------------: | :------------------------------: |
+|    不激活 pick date    |          激活 pick date          |
+
+动态过滤 ItemsLeft 以及 clear Completed说明
+
++ 第一级过滤 不会影响上述两个的出现或者值的变化
+
++ 这两个的出现或者变化只针对第二级过滤以及第三级过滤而言。
+
+  举个例子，如果选择了Low，那么clear completed的时候，只会clear掉 tag 是Low的已完成的item。同理，如果只选择了Low，那么 Items Left 的数量只描述tag为Low的剩余的item的数量。
+
+![multiple filters](record/multiple-filter.gif)
+
+GIF 图并不能展示很好的效果，还请实际尝试。
