@@ -17,9 +17,54 @@ body {
     font-weight: 300;
 }
 
+body.color-one{
+    background: #ffeee4;
+}
+
+body.color-two{
+    background: rgba(255,184,95,0.4);
+}
+
+body.color-three{
+    background: #b8bedd;
+}
+
+.circle{
+    border-radius: 50%;
+    background: #2EC4B6;
+    height: 32px;
+    width: 32px;
+    margin-right: 30px;
+}
+
+.circle.color-one{
+    background: #ffeee4;
+}
+
+.circle.color-two{
+    background: rgba(255,184,95,0.4);
+}
+
+.circle.color-three{
+    background: #b8bedd;
+}
+
+.circle.color-four{
+    background: #f5f5f5;
+}
+
+.circle.selected{
+    border: solid 2px black;
+}
+
+
+.app-wrap{
+    margin: 10px 10px;
+}
+
 
 div.smile-container{
-    height: 80px;
+    height: 50px;
     text-align: center;
 }
 
@@ -33,7 +78,6 @@ img.smile{
 .status{
     display: block;
     height: 60px;
-    margin-top: 10px;
     padding: 0 30px 0 30px;
 }
 
@@ -42,7 +86,7 @@ input[type='date']{
     line-height: 30px;
     text-align: center;
     margin-top: 16px;
-    background-color: #eee;
+    background-color: rgba(0,135,203,0.5);
     border: none;
     float: right;
     outline: none;
@@ -57,21 +101,20 @@ input[type='date']{
 input[type='date'].cur{
     opacity: 1;
     visibility: visible;
-
 }
 
 input[type="date"]::-webkit-datetime-edit-fields-wrapper {
-    background-color: #eee;
+
     width: 200px;
  }
 
-input[type="date"]::-webkit-datetime-ed it-text {
+input[type="date"]::-webkit-datetime-edit-text {
     color: #4D90FE;
 
     /*padding: .1em .5em;*/
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-
 }
+
 
 
 
@@ -101,7 +144,7 @@ input[type="date"]::-webkit-datetime-ed it-text {
 }
 
 .selected {
-    background: rgba(175, 47, 47, 0.2);
+    background: rgba(0,135,203,0.5)
 }
 
 .filters li a.hidbc{
@@ -140,13 +183,27 @@ input[type="date"]::-webkit-datetime-ed it-text {
 
 .input-wrap{
     overflow: hidden;
-    background: #fff;
+    background: rgba(109, 129, 156,0.8);
     padding: 16px 16px 16px 0;
     box-shadow: inset 0 -2px 1px rgba(0, 0, 0, 0.03);
 }
 
-.new-todo,
-.edit {
+.input-wrap.color-one{
+    background: #2EC4B6;
+    box-shadow: inset 0 -2px 1px rgba(46, 196, 182, 0.03);
+}
+
+.input-wrap.color-two{
+    background: #98c1d9;
+    box-shadow: inset 0 -2px 1px rgba(152, 193, 217, 0.03);
+}
+
+.input-wrap.color-three{
+    background: rgba(255,153,51,0.6);;
+    box-shadow: inset 0 -2px 1px rgba(216,164,127, 0.03);
+}
+
+.new-todo{
     float: left;
     width: 75%;
     font-size: 36px;
@@ -156,14 +213,12 @@ input[type="date"]::-webkit-datetime-ed it-text {
     outline: none;
     color: inherit;
     box-sizing: border-box;
-}
-
-.new-todo {
     padding: 0;
     border: none;
     background: rgba(0, 0, 0, 0.003);
-    /*box-shadow: inset 0 -2px 1px rgba(0, 0, 0, 0.03);*/
 }
+
+
 
 .main {
     position: relative;
@@ -207,14 +262,30 @@ input[type="date"]::-webkit-datetime-ed it-text {
     position: relative;
     height: 99px;
     background: #fff;
-    border-bottom: 1px solid #ededed;
+    border-bottom: 1px solid #6d819c;
     transition: transform 400ms ease;
+}
 
+.todo-list li.color-one{
+    border-bottom: 1px solid #2EC4B6;
+    background: #EFFFE9;
+}
+
+.todo-list li.color-two{
+    border-bottom: 1px solid #98c1d9;
+    background: #edf6f9;
+}
+
+.todo-list li.color-three{
+    border-bottom: 1px solid #d8a47f;
+    background: #ddc8c4;
 }
 
 .todo-list li.over-hidden{
     overflow: hidden;
 }
+
+
 
 .todo-list li:last-child {
     border-bottom: none;
@@ -373,7 +444,7 @@ text {
     /*margin-top:20px;*/
     font: 58px 'Helvetica Neue', Helvetica, Arial, sans-serif;
     fill: #000000;
-    font-weight: 100;
+    font-weight: 300;
 
 }
 
@@ -393,7 +464,7 @@ button {
 
 button.add{
 
-    color: #cccc;
+    color: #e6e6e6;
     float: right;
     line-height: 66px;
     margin-right: 5px;
@@ -403,20 +474,27 @@ button.add{
 }
 
 
+.opacity-hidden{
+    transition: 1s;
+    opacity: 0;
+    visibility: hidden;
+}
 
-.clear-completed,
-html .clear-completed:active {
+.opacity-hidden.cur{
+    opacity: 1;
+    visibility: visible;
+}
+
+
+.clear-completed {
     float: right;
     position: relative;
     line-height: 32px;
     font-size: 32px;
     text-decoration: none;
-    cursor: pointer;
 }
 
-.clear-completed:hover {
-    text-decoration: underline;
-}
+
 
 .info {
     margin: 65px auto 0;
@@ -533,6 +611,7 @@ html .clear-completed:active {
     line-height: 99px;
     border-bottom: 1px gray solid;
     margin-top: 15px;
+    padding-inline-start: 15px;
 }
 
 .no-margin{
@@ -571,6 +650,7 @@ html .clear-completed:active {
     height: 40px;
     font-size: 28px;
     line-height: 40px;
+    padding-left: 15px;
 }
 
 .over-hidden{

@@ -66,20 +66,49 @@ window.onload = () =>{
     initSecondFilter();
     initDatePicker();
     initClearButton();
+    initColorChange();
 
     update();
+}
+
+function initColorChange(){
+    var colorButton = document.querySelectorAll('.circle');
+    [].forEach.call(colorButton,function(item) {
+        item.addEventListener('click',function (e) {
+            [].forEach.call(colorButton,function (item) {
+                if(item.classList.contains('selected')){
+                    item.classList.remove('selected');
+                }
+            })
+            model.data.currentColor = colorList.indexOf(item.id);
+            update();
+        })
+
+    })
 }
 
 
 function initDatePicker() {
     var date = document.querySelector("input[type='date']");
+
+    function todayClickBack(){
+        date.value = getCurrentJsonDate().split('T')[0];
+        update();
+    }
+
     getComponent('pick-date-bn').addEventListener('click',function () {
         if(!date.classList.contains('cur')){
             date.classList.add('cur');
             this.classList.add('selected');
+            date.disabled = false;
+            getComponent('today').addEventListener('click',todayClickBack);
+            getComponent('today').classList.add('cur');
         }else{
             date.classList.remove('cur');
+            getComponent('today').classList.remove('cur');
+            getComponent('today').removeEventListener('click',todayClickBack);
             date.value = null;
+            date.disabled = true;
             this.classList.remove('selected');
             update();
         }
@@ -161,8 +190,9 @@ function initToggleAll(){
 function initAddButton() {
 
     var timer;
-    getComponent("add-button").addEventListener('touchstart',function () {
+    getComponent("add-button").addEventListener('touchstart',function (e) {
         console.log("start");
+        e.preventDefault();
         timer = setTimeout(function () {
             var dialog = getComponent("dialog-wrap");
             dialog.classList.remove(CL_HIDDEN);
@@ -265,9 +295,12 @@ function initClearButton(){
     getComponent('clear').addEventListener('click',function () {
         filterArray.forEach(function (item) {
             var itemElem = getComponent('todo'+item.id)
-            itemElem.classList.add(CL_REMOVED);
-            update();
+            if(itemElem.classList.contains(CL_COMPLETED)){
+                itemElem.classList.add(CL_REMOVED);
+                update();
+            }
         })
+
     })
 }
 
@@ -297,6 +330,7 @@ function addToDoItem(){
 function createItemComponent(itemValue){
     var todoItem = document.createElement("li");
     todoItem.classList.add('over-hidden');
+    todoItem.classList.add(colorList[model.data.currentColor]);
     var itemId = 'todo'+ itemValue.id;
     todoItem.id = itemId;
     todoItem.innerHTML = [
@@ -336,6 +370,7 @@ function createItemComponent(itemValue){
         console.log(3);
         console.log(e);
         console.log(moveX);
+
         moveX = 0;
         var touchPoint = e.touches[0];
         startX = touchPoint.pageX;
@@ -412,7 +447,6 @@ function createItemComponent(itemValue){
         if(Math.abs(moveY) < 10 && moveX < 0 && !canSelecPri){
             e.preventDefault();
             this.style.transform = 'translate(' + moveX + 'px, ' + 0 + 'px)';
-         //   this.style.opacity = (1 - Math.abs(moveX) / screen.width).toFixed(1);
         }
         if(Math.abs(moveX) > 10){
             clearTouchTimer();
@@ -464,9 +498,15 @@ function update(){
     var num = 0;
     var date = document.querySelector('input[type="date"]');
     filterArray = [];
+    getComponent(colorList[model.data.currentColor]).classList.add('selected');
+    changeColor(document.getElementsByTagName('body')[0]);
+    changeColor(document.querySelector('.input-wrap'));
+
+
     data.items.forEach(function (itemValue){
         var itemElem = getComponent('todo'+itemValue.id);
         if(itemElem){
+            changeColor(itemElem);
             if(itemElem.classList.contains(CL_REMOVED)){
                 removeToDoItem(itemElem);
                 data.removeItem(itemValue);
@@ -492,33 +532,61 @@ function update(){
                 }
             }
             changePri(itemValue.pri,itemElem);
+            showJudge(itemElem,itemValue,false);
         }else{
             itemElem = createItemComponent(itemValue);
+            showJudge(itemElem,itemValue,true);
         }
-        if(checkDDLFilter(itemValue)){
-            if(checkSecondFilter(itemElem)){
-                num++;
-                if(itemElem.classList.contains(CL_COMPLETED)){
-                    completed++;
-                }
-                if(checkFirstFilter(itemElem)){
-                    console.log(3);
-                    showToDoItem(itemElem)
-                    filterArray.push(itemValue);
+
+    })
+
+    function showJudge(itemElem,itemValue,isCreate){
+        if(!isCreate){
+            if(checkDDLFilter(itemValue)){
+                if(checkSecondFilter(itemElem)){
+                    num++;
+                    if(itemElem.classList.contains(CL_COMPLETED)){
+                        completed++;
+                    }
+                    if(checkFirstFilter(itemElem)){
+                        console.log(3);
+                        showToDoItem(itemElem)
+                        filterArray.push(itemValue);
+                    }else{
+                        console.log(1);
+                        hideToDoItem(itemElem);
+                    }
                 }else{
-                    console.log(1);
+                    console.log(2);
                     hideToDoItem(itemElem);
                 }
             }else{
-                console.log(2);
                 hideToDoItem(itemElem);
             }
         }else{
-            hideToDoItem(itemElem);
+            if(checkDDLFilter(itemValue)){
+                if(checkSecondFilter(itemElem)){
+                    num++;
+                    if(itemElem.classList.contains(CL_COMPLETED)){
+                        completed++;
+                    }
+                    if(checkFirstFilter(itemElem)){
+                        console.log(3);
+                        showToDoItem(itemElem)
+                        filterArray.push(itemValue);
+                    }else{
+                        console.log(1);
+                        itemElem.classList.add(CL_HIDDEN);
+                    }
+                }else{
+                    console.log(2);
+                    itemElem.classList.add(CL_HIDDEN);
+                }
+            }else{
+                itemElem.classList.add(CL_HIDDEN);
+            }
         }
-
-
-    })
+    }
 
     function checkFirstFilter(itemElem) {
         return firstFilterStatus === 0 ||
@@ -561,17 +629,33 @@ function update(){
         }
     }
 
+    function changeColor(elem){
+        console.log(elem)
+        removeColor(elem);
+        if(model.data.currentColor !== colorList.length-1){
+            elem.classList.add(colorList[model.data.currentColor]);
+        }
+    }
+
+    function removeColor(elem){
+        colorList.forEach(function (item) {
+            if(elem.classList.contains(item)){
+                elem.classList.remove(item);
+            }
+        })
+    }
+
     model.flush();
 
     getComponent('todo-count').innerHTML = num-completed + ' Items Left';
-    getComponent('toggle-all').checked = completed === num && num > 0;
+    getComponent('toggle-all').checked = (completed === num || firstFilterStatus===2 ) && completed > 0  ;
     if(completed > 0 && firstFilterStatus!==1){
-        if(getComponent('clear').classList.contains(CL_HIDDEN)){
-            getComponent('clear').classList.remove(CL_HIDDEN);
+        if(!getComponent('clear').classList.contains('cur')){
+            getComponent('clear').classList.add('cur');
         }
     }else{
-        if(!getComponent('clear').classList.contains(CL_HIDDEN)){
-            getComponent('clear').classList.add(CL_HIDDEN);
+        if(getComponent('clear').classList.contains('cur')){
+            getComponent('clear').classList.remove('cur');
         }
     }
 }

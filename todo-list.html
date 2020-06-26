@@ -11,27 +11,36 @@
 </head>
 <body>
 
-<meta content="width=device-width  minimum-scale=0.5  maximum-scale=0.5 " name="viewport"/>
-<svg  viewBox="0 -20 500 120">
-    <path id="curve" d="M150 100 Q250 10  350 100" />
-    <text width="500">
-        <textPath xlink:href="#curve">
-                                T         o        D         o         S
-        </textPath>
-    </text>
-</svg>
+<div class="app-wrap">
+    <div>
+        <div id="color-one" class="right circle color-one "></div>
+        <div id="color-two" class="right circle color-two"></div>
+        <div id="color-three" class="right circle color-three"></div>
+        <div id="color-four" class="right circle color-four"></div>
+    </div>
+
+    <meta content="width=device-width  minimum-scale=0.5  maximum-scale=0.5 " name="viewport"/>
+    <svg  viewBox="0 -20 500 120">
+        <path id="curve" d="M150 100 Q250 10  350 100" />
+        <text width="500">
+            <textPath xlink:href="#curve">
+                T         o        D         o         S
+            </textPath>
+        </text>
+    </svg>
 
     <div class="smile-container">
         <img class="smile" src="resources/smell.png">
     </div>
 
     <div class="status">
+        <span class="todo-count opacity-hidden" id="today">Today</span>
         <span class="todo-count right" id="pick-date-bn"> PickDate </span>
         <input type="date" >
     </div>
 
     <div class="status">
-        <span id='clear' class="todo-count">Clear Selected</span>
+        <span id='clear' class="todo-count opacity-hidden">Clear Completed</span>
         <ul id="first-filter" class="filters">
             <li><a class="selected" >All</a></li>
             <li><a class="">Active</a></li>
@@ -50,44 +59,44 @@
     <div class="todo-wrap">
         <div class="todo-container">
 
-                <!-- Add New Item -->
+            <!-- Add New Item -->
             <div class="input-wrap">
                 <input id="toggle-all" class="toggle-all" type="checkbox">
                 <input id="todo-text" class="new-todo" type="text" placeholder="What needs to be done?" autofocus>
                 <button id="add-button" class="add">+</button>
             </div>
 
-<!--            <div style="height: 99px"></div>-->
+            <!--            <div style="height: 99px"></div>-->
             <div>
                 <ul id="todo-list" class="todo-list">
-<!--                    <li class="over-hidden">-->
-<!--                        <div class="view">-->
-<!--                            <div class="wrapper E">E</div>-->
-<!--                            <div class="wrapper M">M</div>-->
-<!--                            <div class="wrapper L">L</div>-->
-<!--                            <div class="wrapper min L"></div>-->
+                    <!--                    <li class="over-hidden">-->
+                    <!--                        <div class="view">-->
+                    <!--                            <div class="wrapper E">E</div>-->
+                    <!--                            <div class="wrapper M">M</div>-->
+                    <!--                            <div class="wrapper L">L</div>-->
+                    <!--                            <div class="wrapper min L"></div>-->
 
-<!--                            <div class="todo-content">-->
-<!--                                <div> Software-testing</div>-->
-<!--                                <div> DDL: time</div>-->
+                    <!--                            <div class="todo-content">-->
+                    <!--                                <div> Software-testing</div>-->
+                    <!--                                <div> DDL: time</div>-->
 
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </li>-->
+                    <!--                            </div>-->
+                    <!--                        </div>-->
+                    <!--                    </li>-->
                 </ul>
             </div>
-                <!-- Show List -->
+            <!-- Show List -->
 
 
-<!--                <footer class="footer">-->
-<!--                    <span class="todo-count"></span>-->
-<!--                    <ul class="filters">-->
-<!--                        <li><a class="selected" >All</a></li>-->
-<!--                        <li><a class="">Active</a></li>-->
-<!--                        <li><a class="">Completed</a></li>-->
-<!--                    </ul>-->
-<!--                    <button class="clear-completed">Clear completed</button>-->
-<!--                </footer>-->
+            <!--                <footer class="footer">-->
+            <!--                    <span class="todo-count"></span>-->
+            <!--                    <ul class="filters">-->
+            <!--                        <li><a class="selected" >All</a></li>-->
+            <!--                        <li><a class="">Active</a></li>-->
+            <!--                        <li><a class="">Completed</a></li>-->
+            <!--                    </ul>-->
+            <!--                    <button class="clear-completed">Clear completed</button>-->
+            <!--                </footer>-->
 
         </div>
     </div>
@@ -118,6 +127,8 @@
 
         </div>
     </div>
+</div>
+
 
 
 
