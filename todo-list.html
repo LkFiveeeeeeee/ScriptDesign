@@ -7,8 +7,10 @@
     <script src="todo-list.js"></script>
     <script src="model.js"></script>
     <script src="provider.js"></script>
+    <script src="timeformat.js"></script>
 </head>
 <body>
+
 <meta content="width=device-width  minimum-scale=0.5  maximum-scale=0.5 " name="viewport"/>
 <svg  viewBox="0 -20 500 120">
     <path id="curve" d="M150 100 Q250 10  350 100" />
@@ -21,6 +23,11 @@
 
     <div class="smile-container">
         <img class="smile" src="resources/smell.png">
+    </div>
+
+    <div class="status">
+        <span class="todo-count right" id="pick-date-bn"> PickDate </span>
+        <input type="date" >
     </div>
 
     <div class="status">
@@ -53,9 +60,20 @@
 <!--            <div style="height: 99px"></div>-->
             <div>
                 <ul id="todo-list" class="todo-list">
+<!--                    <li class="over-hidden">-->
+<!--                        <div class="view">-->
+<!--                            <div class="wrapper E">E</div>-->
+<!--                            <div class="wrapper M">M</div>-->
+<!--                            <div class="wrapper L">L</div>-->
+<!--                            <div class="wrapper min L"></div>-->
 
+<!--                            <div class="todo-content">-->
+<!--                                <div> Software-testing</div>-->
+<!--                                <div> DDL: time</div>-->
 
-
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </li>-->
                 </ul>
             </div>
                 <!-- Show List -->

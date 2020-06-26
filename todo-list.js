@@ -11,12 +11,13 @@ var CL_LOW = 'L';
 **  pri 0,1,2 => low , medium , emergency
 **  status 0 => actived 1 => completed
  */
-function createToDoItem(id,pri,content,status){
+function createToDoItem(id,pri,content,status,ddl){
     var item = {
         id:id,
         pri:pri,
         content:content,
-        status:status
+        status:status,
+        ddl:ddl
     }
     return item
 }
@@ -63,9 +64,30 @@ window.onload = () =>{
     initToggleAll();
     initFirstFilter();
     initSecondFilter();
+    initDatePicker();
     initClearButton();
 
     update();
+}
+
+
+function initDatePicker() {
+    var date = document.querySelector("input[type='date']");
+    getComponent('pick-date-bn').addEventListener('click',function () {
+        if(!date.classList.contains('cur')){
+            date.classList.add('cur');
+            this.classList.add('selected');
+        }else{
+            date.classList.remove('cur');
+            date.value = null;
+            this.classList.remove('selected');
+            update();
+        }
+    })
+    date.addEventListener('change',function (e) {
+        console.log(date.value);
+        update();
+    })
 }
 
 function initFirstFilter(){
@@ -149,6 +171,10 @@ function initAddButton() {
             if(todoText.value !== ""){
                 dialog.querySelector('.dialog').value = todoText.value;
             }
+            var inputTimePicker = document.querySelector('input[type="datetime-local"]');
+            inputTimePicker.value = getNextHourJsonDate();
+            inputTimePicker.min = getCurrentJsonDate();
+
             setDialogPri(0);
             timer = null;
         },1000)
@@ -177,13 +203,16 @@ function initDialog() {
     })
 
     getComponent('apply').addEventListener('click',function () {
+        var ddl = document.querySelector('input[type="datetime-local"]').value;
+        ddl = jsonFormat2showFormat(ddl);
         if(!window.editValue.isEdit){
-            var todoItem = createToDoItem(model.data.id++,editValue.selePri,inputField.value,0);
+            var todoItem = createToDoItem(model.data.id++,editValue.selePri,inputField.value,0,ddl);
             model.data.items.push(todoItem);
         }else{
             var dataIndex = model.data.items.indexOf(editValue.editItem);
             model.data.getItem(dataIndex).content = inputField.value;
             model.data.getItem(dataIndex).pri = editValue.selePri;
+            model.data.getItem(dataIndex).ddl = ddl;
         }
 
 
@@ -256,8 +285,9 @@ function addToDoItem(){
     if(text === ""){
         return ;
     }
+    var ddl = jsonFormat2showFormat(getNextHourJsonDate());
     console.log(text);
-    var item = createToDoItem(model.data.id++,0,text,0);
+    var item = createToDoItem(model.data.id++,0,text,0,ddl);
     model.data.items.push(item);
 
     todoText.value = "";
@@ -275,7 +305,10 @@ function createItemComponent(itemValue){
         '  <div class="wrapper M">M</div>',
         '  <div class="wrapper L">L</div>',
         '  <div class="wrapper min"></div>',
-        '  <div class="todo-content">' + itemValue.content + '</div>',
+        '  <div class="todo-content">',
+        '       <div class="content">'+ itemValue.content+' </div>',
+        '       <div class="ddl"> DDL: ' + itemValue.ddl + '</div>',
+        '  </div>',
         '</div>'
     ].join('');
 
@@ -311,7 +344,10 @@ function createItemComponent(itemValue){
             var dialog = getComponent("dialog-wrap");
             dialog.classList.remove(CL_HIDDEN);
             dialog.getElementsByTagName('h3')[0].innerHTML = 'Edit Todo Item';
-            dialog.querySelector('.dialog').value = todoItem.querySelector('.todo-content').innerHTML;
+            dialog.querySelector('.dialog').value = todoItem.querySelector('.content').innerHTML;
+            var timePicker = document.querySelector('input[type="datetime-local"]');
+            timePicker.value = showFormat2jsonFormat(itemValue.ddl);
+            timePicker.min = getCurrentJsonDate();
             editValue.isEdit = true;
             editValue.editItem = itemValue;
             editValue.selePri = itemValue.pri;
@@ -426,6 +462,7 @@ function update(){
     var data = model.data;
     var completed = 0;
     var num = 0;
+    var date = document.querySelector('input[type="date"]');
     filterArray = [];
     data.items.forEach(function (itemValue){
         var itemElem = getComponent('todo'+itemValue.id);
@@ -435,8 +472,13 @@ function update(){
                 data.removeItem(itemValue);
                 return;
             }
-            if(itemElem.querySelector('.todo-content').innerHTML != itemValue.content){
-                itemElem.querySelector('.todo-content').innerHTML = itemValue.content;
+            if(itemElem.querySelector('.content').innerHTML != itemValue.content){
+                itemElem.querySelector('.content').innerHTML = itemValue.content;
+            }
+            var ddl = itemElem.querySelector('.ddl').innerText;
+            ddl = ddl.substr(ddl.indexOf(' ')+1);
+            if(ddl != itemValue.ddl){
+                itemElem.querySelector('.ddl').innerText = 'DDL: ' + itemValue.ddl;
             }
             if(itemValue.status === 1){
                 if(!itemElem.classList.contains(CL_COMPLETED)){
@@ -453,23 +495,28 @@ function update(){
         }else{
             itemElem = createItemComponent(itemValue);
         }
-        if(checkSecondFilter(itemElem)){
-            num++;
-            if(itemElem.classList.contains(CL_COMPLETED)){
-                completed++;
-            }
-            if(checkFirstFilter(itemElem)){
-                console.log(3);
-                showToDoItem(itemElem)
-                filterArray.push(itemValue);
+        if(checkDDLFilter(itemValue)){
+            if(checkSecondFilter(itemElem)){
+                num++;
+                if(itemElem.classList.contains(CL_COMPLETED)){
+                    completed++;
+                }
+                if(checkFirstFilter(itemElem)){
+                    console.log(3);
+                    showToDoItem(itemElem)
+                    filterArray.push(itemValue);
+                }else{
+                    console.log(1);
+                    hideToDoItem(itemElem);
+                }
             }else{
-                console.log(1);
+                console.log(2);
                 hideToDoItem(itemElem);
             }
         }else{
-            console.log(2);
             hideToDoItem(itemElem);
         }
+
 
     })
 
@@ -490,6 +537,13 @@ function update(){
             }
         })
         return judge;
+    }
+
+    function checkDDLFilter(itemValue) {
+        if(date.value === "" || itemValue.ddl.split(' ')[0] === date.value){
+            return true;
+        }
+        return false;
     }
 
     function changePri(selePri,itemElem){
