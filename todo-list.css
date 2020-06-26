@@ -1,3 +1,11 @@
+/*
+** @Author: Liuke
+** @StudentId: 1651573
+** @Description: Some styles are referring to the script of Teacher Xu,
+**            while almost all the styles has been changed to adapt to my ideal page.
+**
+ */
+
 
 html,
 body {
@@ -182,7 +190,7 @@ input[type="date"]::-webkit-datetime-edit-text {
 
 
 .input-wrap{
-    overflow: hidden;
+    overflow-x: hidden;
     background: rgba(109, 129, 156,0.8);
     padding: 16px 16px 16px 0;
     box-shadow: inset 0 -2px 1px rgba(0, 0, 0, 0.03);
@@ -214,38 +222,25 @@ input[type="date"]::-webkit-datetime-edit-text {
     color: inherit;
     box-sizing: border-box;
     padding: 0;
+    padding-left: 16px;
     border: none;
     background: rgba(0, 0, 0, 0.003);
 }
 
-
-
-.main {
-    position: relative;
-    z-index: 2;
-    border-top: 1px solid #e6e6e6;
-}
-
-/*label[for='toggle-all'] {*/
-/*    display: none;*/
-/*}*/
-
 .toggle-all {
     float: left;
     outline: none;
-    /*width: 70px;*/
     text-align: center;
     border: none; /* Mobile Safari */
     line-height: 66px;
     height: 66px;
-    margin-right: 5px;
+    width: 63px;
 }
 
 .toggle-all:before {
-    content: '❯';
+    content: '\27A4';
     font-size: 36px;
     color: #e6e6e6;
-    padding: 10px 27px 10px 27px;
 }
 
 .toggle-all:checked:before {
@@ -282,7 +277,7 @@ input[type="date"]::-webkit-datetime-edit-text {
 }
 
 .todo-list li.over-hidden{
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
 
@@ -291,30 +286,13 @@ input[type="date"]::-webkit-datetime-edit-text {
     border-bottom: none;
 }
 
-
-.todo-list li .toggle {
-    text-align: center;
-    width: 40px;
-    /* auto, since non-WebKit browsers doesn't support input styling */
-    height: auto;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    margin: auto 0;
-    border: none; /* Mobile Safari */
-    -webkit-appearance: none;
-    appearance: none;
-}
-
-
-
 .todo-list li .todo-content {
     padding: 16px 16px 16px 16px;
     display: inline-block;
     font-size: 36px;
     line-height: 66px;
     transition: color 0.4s;
-    overflow: hidden;
+    overflow-x: hidden;
     width: 75%;
 }
 
@@ -330,16 +308,26 @@ input[type="date"]::-webkit-datetime-edit-text {
 .todo-content .ddl{
     line-height: 16px;
     font-size: 20px;
-    margin-top: 10px;
-    font-style: italic;
+    margin-top: 20px;
+    /*font-style: italic;*/
     color: #666;
 }
+
+.todo-content .ddl.El{
+    color: red;
+    font-weight: 400;
+}
+
+.todo-content .ddl.Ml{
+    color: #CE6D39;
+    font-weight: 400;
+}
+
 
 .todo-list li .view{
     display: block;
     height: 100%;
     width: auto;
-
     left: -240px;
     transform: translateX(-240px);
     white-space:nowrap;
@@ -388,29 +376,6 @@ input[type="date"]::-webkit-datetime-edit-text {
     background: lightgreen;
 }
 
-
-.footer {
-    color: #777;
-    padding: 10px 15px;
-    height: 36px;
-
-    border-top: 1px solid #e6e6e6;
-}
-
-.footer:before {
-    content: '';
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    height: 50px;
-    overflow: hidden;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2),
-    0 8px 0 -3px #f6f6f6,
-    0 9px 1px -3px rgba(0, 0, 0, 0.2),
-    0 16px 0 -6px #f6f6f6,
-    0 17px 2px -6px rgba(0, 0, 0, 0.2);
-}
 
 .todo-count {
     float: left;

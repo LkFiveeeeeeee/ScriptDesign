@@ -1,3 +1,12 @@
+/**
+ *
+ * @Author: Liuke
+ * @StudentID: 1651573
+ * @Description: This file defines some functions to help to change the format of time or date.
+ *
+ */
+
+
 var offet = 8;
 
 function jsonFormatFix(date) {
@@ -29,4 +38,13 @@ function jsonFormat2showFormat(date){
 function showFormat2jsonFormat(date){
     date = date.replace(' ','T');
     return date;
+}
+
+function compareDate(dateOne,dateTwo){
+    var diff = (dateOne.getTime()-dateTwo.getTime());
+    if(diff<0){
+        return 0;
+    }else{
+        return parseInt(diff/(1000*24*60*60));
+    }
 }

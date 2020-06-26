@@ -1,3 +1,13 @@
+/**
+ *
+ * @Author: Liuke
+ * @StudentID: 1651573
+ * @Description: This file defines the data (model) needed to be stored in localStorage
+ *         and some global variants.
+ *
+ */
+
+
 window.model = {
     data:{
         items:[

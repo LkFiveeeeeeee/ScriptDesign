@@ -1,5 +1,12 @@
-"use strict"
+/**
+ *
+ * @Author: Liuke
+ * @StudentID: 1651573
+ * @Description: This is the main file to handle the running of my todo-list.
+ *
+ */
 
+"use strict"
 
 var CL_COMPLETED = 'completed';
 var CL_HIDDEN = 'hidden';
@@ -7,9 +14,17 @@ var CL_REMOVED = 'removed'
 var CL_EMERGENCY = 'E';
 var CL_MEDIUM = 'M';
 var CL_LOW = 'L';
-/*
-**  pri 0,1,2 => low , medium , emergency
-**  status 0 => actived 1 => completed
+
+
+
+/**
+ * The function to create a todoItemValue which will be stored in the model.data.items
+ * @param id
+ * @param pri [0,2]  0,1,2 => low , medium , emergency
+ * @param content
+ * @param status 0 => actived 1 => completed
+ * @param ddl
+ * @returns {{pri: *, id: *, ddl: *, content: *, status: *}}
  */
 function createToDoItem(id,pri,content,status,ddl){
     var item = {
@@ -71,6 +86,10 @@ window.onload = () =>{
     update();
 }
 
+
+/**
+ * Initialize the listener of changeColorButton
+ */
 function initColorChange(){
     var colorButton = document.querySelectorAll('.circle');
     [].forEach.call(colorButton,function(item) {
@@ -87,7 +106,9 @@ function initColorChange(){
     })
 }
 
-
+/**
+ * Initialize the listener of datePicker
+ */
 function initDatePicker() {
     var date = document.querySelector("input[type='date']");
 
@@ -119,6 +140,10 @@ function initDatePicker() {
     })
 }
 
+
+/**
+ * Initialize the listeners of the elements in firstFilter area.
+ */
 function initFirstFilter(){
     var firstFilterWrap = getComponent('first-filter');
     var filterArrays = firstFilterWrap.getElementsByTagName('li');
@@ -153,6 +178,9 @@ function initFirstFilter(){
     }
 }
 
+/**
+ * Initialize the listeners of the elements in firstFilter area.
+ */
 function initSecondFilter(){
     var secondFilterWrap = getComponent('second-filter');
     var secondArrays = secondFilterWrap.getElementsByTagName('li');
@@ -173,6 +201,9 @@ function initSecondFilter(){
     }
 }
 
+/**
+ * Initialize the listener of the toggle-all button.
+ */
 function initToggleAll(){
     getComponent('toggle-all').addEventListener('click',function () {
         var temp = this;
@@ -187,6 +218,10 @@ function initToggleAll(){
     })
 }
 
+/**
+ * Initialize the listener of the add button.
+ * Two operations are supported. One is tap and another is long tap.
+ */
 function initAddButton() {
 
     var timer;
@@ -222,7 +257,10 @@ function initAddButton() {
 
 }
 
-
+/**
+ * Initialize the listener of the dialog.
+ * It is the show result after long tapping.
+ */
 function initDialog() {
     var dialog = getComponent('dialog-wrap');
     var inputField = dialog.querySelector('.dialog');
@@ -291,6 +329,10 @@ function initDialog() {
 
 }
 
+
+/**
+ * Initialize the listener of the clear button.
+ */
 function initClearButton(){
     getComponent('clear').addEventListener('click',function () {
         filterArray.forEach(function (item) {
@@ -304,6 +346,10 @@ function initClearButton(){
     })
 }
 
+/**
+ * Set the content for dialog.
+ * @param priIndex  It represents which one is activated.
+ */
 function setDialogPri(priIndex){
     var dialog = getComponent('dialog-wrap');
     var priItem = dialog.querySelector('.'+constPri[priIndex]);
@@ -312,6 +358,9 @@ function setDialogPri(priIndex){
     }
 }
 
+/**
+ * A function will be called when you tap (not long) the add button.
+ */
 function addToDoItem(){
     var todoText = getComponent('todo-text')
     var text = todoText.value;
@@ -327,6 +376,11 @@ function addToDoItem(){
     update();
 }
 
+/**
+ * Creating the DOM element according the input value.
+ * @param itemValue  It is the core value that we store in the localStorage.
+ * @returns {HTMLLIElement}
+ */
 function createItemComponent(itemValue){
     var todoItem = document.createElement("li");
     todoItem.classList.add('over-hidden');
@@ -354,6 +408,13 @@ function createItemComponent(itemValue){
         update();
     })
 
+    var diff = compareDate(new Date(itemValue.ddl),new Date());
+    if(diff <=0){
+        todoItem.querySelector('.ddl').classList.add('El');
+    }else if(diff <=1){
+        todoItem.querySelector('.ddl').classList.add('Ml');
+    }
+
     if(itemValue.status === 1){
         todoItem.classList.add(CL_COMPLETED);
         showPri.classList.add("checked");
@@ -365,7 +426,11 @@ function createItemComponent(itemValue){
     var touchTimer = null;
 
 
-
+    /**
+     * Touchstart EventListener.
+     * It can be triggered when setting the priority, editing the content
+     *              and removing the element.
+     */
     todoItem.addEventListener('touchstart',function (e) {
         console.log(3);
         console.log(e);
@@ -391,6 +456,11 @@ function createItemComponent(itemValue){
         },1000)
     })
 
+    /**
+     * Touchend EventListener.
+     * It can be triggered when setting the priority, editing the content
+     *              and removing the element.
+     */
     todoItem.addEventListener('touchend',function (e) {
         console.log(2);
         console.log(e);
@@ -415,6 +485,11 @@ function createItemComponent(itemValue){
             this.querySelector('.min').classList.add(CL_HIDDEN);
             this.style.transform = 'translateX(' + 240 + 'px)';
         }
+        /**
+         * A high-level( root) listener.
+         * Using this to reset the position of element if the user moves the element
+         *                                      but doesn't do the next step according to the logic.
+         */
         document.addEventListener('touchstart',function tempLis(e) {
 
             var liX1 = todoItem.offsetLeft;
@@ -440,6 +515,12 @@ function createItemComponent(itemValue){
         todoItem.querySelector('.min').classList.remove(CL_HIDDEN);
     }
 
+    /**
+     * Touchmove EventListener.
+     * It can be triggered when setting the priority, editing the content
+     *              and removing the element.
+     * If the moving distance is bigger than a threshold, the editing operation will not be triggered.
+     */
     todoItem.addEventListener('touchmove',function (e) {
         var touchPoint = e.touches[0];
         moveX = touchPoint.pageX - startX;
@@ -492,6 +573,11 @@ function createItemComponent(itemValue){
     }
 }
 
+/**
+ * Core function.
+ * Most of view change will be updated in this function while other function
+ *                              only change the value of the model data.
+ */
 function update(){
     var data = model.data;
     var completed = 0;
@@ -502,7 +588,10 @@ function update(){
     changeColor(document.getElementsByTagName('body')[0]);
     changeColor(document.querySelector('.input-wrap'));
 
-
+    /**
+     * Core loop.
+     * It will change the style when some value change happens.
+     */
     data.items.forEach(function (itemValue){
         var itemElem = getComponent('todo'+itemValue.id);
         if(itemElem){
@@ -515,11 +604,24 @@ function update(){
             if(itemElem.querySelector('.content').innerHTML != itemValue.content){
                 itemElem.querySelector('.content').innerHTML = itemValue.content;
             }
-            var ddl = itemElem.querySelector('.ddl').innerText;
+            var ddlElem = itemElem.querySelector('.ddl');
+            var ddl = ddlElem.innerText;
             ddl = ddl.substr(ddl.indexOf(' ')+1);
             if(ddl != itemValue.ddl){
                 itemElem.querySelector('.ddl').innerText = 'DDL: ' + itemValue.ddl;
             }
+            ddl = ddlElem.innerText;
+            ddl = ddl.substr(ddl.indexOf(' ')+1);
+            if(itemValue.status !== 1){
+                removeDDlWarning(itemElem);
+                var diff = compareDate(new Date(ddl),new Date());
+                if(diff <= 0){
+                    ddlElem.classList.add('El');
+                }else if(diff <=1){
+                    ddlElem.classList.add('Ml');
+                }
+            }
+            // var ddlDate = ddl.substr()
             if(itemValue.status === 1){
                 if(!itemElem.classList.contains(CL_COMPLETED)){
                     itemElem.classList.add(CL_COMPLETED);
@@ -540,6 +642,12 @@ function update(){
 
     })
 
+    /**
+     * Tertiary filtration function. It will check whether the element can be shown in the specific conditions.
+     * @param itemElem  DomObject
+     * @param itemValue model data
+     * @param isCreate A boolean value to judge whether the dom element is just created.
+     */
     function showJudge(itemElem,itemValue,isCreate){
         if(!isCreate){
             if(checkDDLFilter(itemValue)){
@@ -645,6 +753,17 @@ function update(){
         })
     }
 
+    function removeDDlWarning(elem){
+        var ddlElem = elem.querySelector('.ddl');
+        if(ddlElem.classList.contains('El')){
+            ddlElem.classList.remove('El');
+        }
+        if(ddlElem.classList.contains('Ml')){
+            ddlElem.classList.remove('Ml');
+        }
+    }
+
+    // save the data to local Storage
     model.flush();
 
     getComponent('todo-count').innerHTML = num-completed + ' Items Left';
@@ -660,6 +779,11 @@ function update(){
     }
 }
 
+
+/**
+ * Animation Operation to show the item.
+ * @param item DOM Object
+ */
 function showToDoItem(item){
     while(item.classList.contains(CL_HIDDEN)){
         item.classList.remove(CL_HIDDEN);
@@ -667,8 +791,11 @@ function showToDoItem(item){
     item.style.animation = "addItem 0.5s";
 }
 
+/**
+ * Animation Operation to hide the item.
+ * @param item DOM Object
+ */
 function hideToDoItem(item){
-
     function animationCallback(e){
         console.log(e);
         if(e.animationName == 'hideItem'){
@@ -677,8 +804,6 @@ function hideToDoItem(item){
             }
             item.removeEventListener("animationend", animationCallback)
         }
-
-
         console.log("hidden!")
     }
 
@@ -689,12 +814,15 @@ function hideToDoItem(item){
 
 }
 
+/**
+ * Animation Operation to remove the item.
+ * @param item DOM Object
+ */
 function removeToDoItem(item){
     function animationCallBack(){
         item.removeEventListener("animationend", removeToDoItem)
         item.parentNode.removeChild(item);
     }
-
     item.addEventListener("animationend",animationCallBack);
     item.style.animation = "hideItem 0.5s";
 }

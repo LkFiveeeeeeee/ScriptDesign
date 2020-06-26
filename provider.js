@@ -1,3 +1,14 @@
+/**
+ *
+ * @Author: Liuke
+ * @StudentID: 1651573
+ * @Description: This file, referring to the implementation of teacher Xu,
+ *        defines the operation of model.
+ *
+ */
+
+
+
 (function () {
     var model = window.model;
     var storage = window.localStorage;
